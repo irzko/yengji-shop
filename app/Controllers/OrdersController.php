@@ -56,8 +56,9 @@ class OrdersController extends Controller
 
     public function removeOrder()
     {
-        $data = $this->filterOrderData($_POST); 
-        Order::where('user_id', '=', $data['user_id'])->where('product_id', '=', $data['product_id'])->delete();
+        // $data = $this->filterOrderData($_POST); 
+        // Order::where('user_id', '=', $data['user_id'])->where('product_id', '=', $data['product_id'])->delete();
+        Order::find($_POST['id'])->delete();
     }
 
     protected function filterOrderData(array $data)

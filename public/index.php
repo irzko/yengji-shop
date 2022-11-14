@@ -27,6 +27,7 @@ $router->post('/rm-cart', 'CartsController@removeCart');
 $router->get('/order', 'OrdersController@getOrder');
 $router->post('/order', 'OrdersController@addOrder');
 $router->get('/order/{orderId}', 'OrdersController@findOrderById');
+$router->post('/remove-order', 'OrdersController@removeOrder');
 
 
 $router->get('/product/{prodId}', 'ProductsController@findProdById');

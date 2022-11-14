@@ -47,13 +47,33 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel"></h5>
-          <button type="button" class="close-modal btn-close" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body info-order">
         </div>
         <div class="modal-footer">
           <button type="button" class="close-modal btn border-secondary rounded-pill">Đóng</button>
-          <button type="button" class="btn btn-danger rounded-pill">Huỷ đơn</button>
+          <button type="button" class="btn btn-danger rounded-pill" id="remove-btn">Huỷ đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="cancelOrder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận huỷ đơn hàng
+            #<span id="order-id-confirm"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có muốn huỷ đơn hành này
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="close-modal btn border-secondary rounded-pill" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-danger rounded-pill" id="confirm-btn">Xác nhận</button>
         </div>
       </div>
     </div>
@@ -67,6 +87,24 @@
 $(function(){
   const myModal = new bootstrap.Modal('#myModal', {
     keyboard: false
+  });
+
+  const confirmRemoveOrder = new bootstrap.Modal('#cancelOrder', {
+    keyboard: false
+  });
+
+  $("#confirm-btn").click(function() {
+    let order_id = $('#order-id-confirm').text();
+    $.post("/remove-order", {id: order_id}, function () {
+          location.reload();
+        });
+  });
+
+  $("#remove-btn").click(function () {
+    let order_id = $('#order-id').text();
+    confirmRemoveOrder.show();
+    $('#order-id-confirm').text(order_id);
+    myModal.hide();
   });
 
   $(".close-modal").each(function () {
@@ -85,8 +123,8 @@ $(function(){
         let order = JSON.parse(res);
         $.get(`/product/${order.product_id}`, function(prod) {
           let prodData = JSON.parse(prod);
-          $("#exampleModalLabel").text(`Đơn hàng #${orderId}`);
-          $(".modal-body").html(
+          $("#exampleModalLabel").html(`<span>Đơn hàng #</span><span id="order-id">${orderId}</span>`);
+          $(".info-order").html(
             `
             <div class="row"><span class="fw-semibold col-3 text-end">Tên sản phẩm: </span><span class="col">${prodData.name}</span></div>
             <div class="row"><span class="fw-semibold col-3 text-end">Số lượng: </span><span class="col">${order.amount}</span></div>
